@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIP Restaurant | Order Online</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #f7f7f7; font-family: 'Segoe UI', sans-serif; }
+        .food-card { border-radius: 15px; overflow: hidden; background: white; transition: 0.3s; }
+        .btn-add { background: #e23744; color: white; border-radius: 8px; font-weight: bold; }
+        .cart-float { background: #2563eb; color: white; border-radius: 12px; }
+    </style>
+</head>
+<body class="pb-24">
+
+    <div class="bg-white p-4 shadow-sm sticky top-0 z-50 flex justify-between items-center">
+        <div>
+            <h1 class="text-xl font-black text-red-600 tracking-tighter">VIP RESTO</h1>
+            <p class="text-[10px] text-gray-400 uppercase tracking-widest">Premium Quality Food</p>
+        </div>
+        <i class="fa fa-search text-gray-400"></i>
+    </div>
+
+    <div class="p-4 space-y-4">
+        <h2 class="text-sm font-bold text-gray-500 uppercase tracking-wider">Recommended Items</h2>
+        
+        <div class="food-card p-3 flex shadow-sm border border-gray-100">
+            <img src="https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=200" class="w-24 h-24 object-cover rounded-xl">
+            <div class="ml-4 flex-1">
+                <h3 class="font-bold text-slate-800 text-lg">Paneer Special</h3>
+                <p class="text-gray-400 text-xs line-clamp-2">Soft paneer in rich buttery gravy</p>
+                <div class="mt-3 flex justify-between items-center">
+                    <span class="font-bold text-slate-900">₹250</span>
+                    <button onclick="addToCart('Paneer Special', 250)" class="btn-add px-5 py-1.5 text-xs shadow-md active:scale-95 transition">ADD</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="food-card p-3 flex shadow-sm border border-gray-100">
+            <img src="https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=200" class="w-24 h-24 object-cover rounded-xl">
+            <div class="ml-4 flex-1">
+                <h3 class="font-bold text-slate-800 text-lg">Royal Biryani</h3>
+                <p class="text-gray-400 text-xs line-clamp-2">Aromatic basmati rice with spices</p>
+                <div class="mt-3 flex justify-between items-center">
+                    <span class="font-bold text-slate-900">₹320</span>
+                    <button onclick="addToCart('Royal Biryani', 320)" class="btn-add px-5 py-1.5 text-xs shadow-md active:scale-95 transition">ADD</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="cartBar" class="hidden fixed bottom-6 left-4 right-4 cart-float p-4 shadow-2xl flex justify-between items-center animate-bounce-short">
+        <div>
+            <p id="cartItems" class="text-xs font-bold opacity-80 uppercase">0 Items added</p>
+            <p id="cartTotal" class="text-lg font-black">₹0</p>
+        </div>
+        <button onclick="showOrderForm()" class="bg-white text-blue-600 px-6 py-2 rounded-lg font-black text-sm uppercase">Next <i class="fa fa-arrow-right ml-1"></i></button>
+    </div>
+
+    <div id="orderForm" class="hidden fixed inset-0 bg-black/60 z-[60] flex items-end">
+        <div class="bg-white w-full rounded-t-3xl p-6 animate-slide-up">
+            <h3 class="text-xl font-bold mb-4 text-slate-800">Delivery Details</h3>
+            <input id="custName" type="text" placeholder="Your Name" class="w-full border p-3 rounded-lg mb-3 outline-none focus:border-blue-500 text-sm">
+            <input id="custPhone" type="tel" placeholder="Mobile Number" class="w-full border p-3 rounded-lg mb-3 outline-none focus:border-blue-500 text-sm">
+            <textarea id="custAddr" placeholder="Full Delivery Address" class="w-full border p-3 rounded-lg mb-4 outline-none focus:border-blue-500 text-sm h-20"></textarea>
+            
+            <button id="submitBtn" onclick="placeOrder()" class="w-full bg-green-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg active:scale-95 transition">PLACE ORDER & PAY</button>
+            <button onclick="closeForm()" class="w-full text-gray-400 mt-3 text-sm font-medium">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        const SCRIPT_URL = "PASTE_YOUR_NEW_URL_HERE";
+        let cart = [];
+        let total = 0;
+
+        function addToCart(name, price) {
+            cart.push(name);
+            total += price;
+            document.getElementById('cartBar').classList.remove('hidden');
+            document.getElementById('cartItems').innerText = cart.length + " Items added";
+            document.getElementById('cartTotal').innerText = "₹" + total;
+        }
+
+        function showOrderForm() { document.getElementById('orderForm').classList.remove('hidden'); }
+        function closeForm() { document.getElementById('orderForm').classList.add('hidden'); }
+
+        async function placeOrder() {
+            const name = document.getElementById('custName').value;
+            const phone = document.getElementById('custPhone').value;
+            const addr = document.getElementById('custAddr').value;
+            const btn = document.getElementById('submitBtn');
+
+            if(!name || !phone || !addr) { alert("Please fill all details"); return; }
+
+            btn.disabled = true;
+            btn.innerHTML = "Processing Order...";
+            
+            const txnId = "TXN" + Math.floor(Math.random() * 999999);
+            const orderData = {
+                action: "addOrder",
+                name: name,
+                order: cart.join(", "),
+                total: total,
+                address: addr,
+                phone: phone,
+                txn: txnId
+            };
+
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify(orderData)
+                });
+                alert("Order Placed Successfully! Transaction ID: " + txnId);
+                location.reload();
+            } catch (e) {
+                alert("Order failed. Please try again.");
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
