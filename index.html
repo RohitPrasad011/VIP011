@@ -3,131 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIP Food Service</title>
+    <title>VIP Food Service | Premium Delivery</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .hidden { display: none; }
-        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #ea580c; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; }
+        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #f97316; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="bg-slate-50 font-sans">
+<body class="bg-gray-50 font-sans antialiased">
 
-    <div id="app-shell" class="max-w-md mx-auto min-h-screen bg-white shadow-2xl relative">
+    <div id="main-app" class="max-w-md mx-auto min-h-screen bg-white shadow-2xl relative overflow-hidden">
         
-        <header class="bg-orange-600 text-white p-6 text-center shadow-lg">
-            <h1 class="text-2xl font-black italic tracking-tighter">VIP FOOD SERVICE</h1>
+        <header class="bg-orange-600 text-white py-6 text-center shadow-lg">
+            <h1 class="text-2xl font-black italic tracking-tighter uppercase">VIP FOOD SERVICE</h1>
+            <p class="text-[10px] tracking-[3px] opacity-75">PREMIUM QUALITY & FAST DELIVERY</p>
         </header>
 
-        <div id="loading-overlay" class="hidden absolute inset-0 bg-white/90 z-50 flex flex-col justify-center items-center">
+        <div id="loader" class="hidden absolute inset-0 bg-white/90 z-50 flex flex-col justify-center items-center">
             <div class="spinner mb-4"></div>
-            <p class="font-bold text-orange-600 uppercase tracking-widest text-xs">Processing Request</p>
+            <p class="font-bold text-orange-600 animate-pulse uppercase text-xs tracking-widest">Processing Request...</p>
         </div>
 
-        <div id="screen-login" class="p-8">
-            <h2 class="text-3xl font-extrabold mb-10 text-slate-800 text-center">Login</h2>
+        <div id="view-login" class="p-8">
+            <h2 class="text-3xl font-bold mb-2 text-gray-800">Welcome Back</h2>
+            <p class="text-gray-400 text-sm mb-8">Login to access your premium menu.</p>
             <div class="space-y-4">
-                <input type="number" id="login-mobile" placeholder="Mobile Number" class="w-full p-4 border-2 border-slate-100 rounded-2xl outline-none focus:border-orange-500 transition-all">
-                <input type="password" id="login-pass" placeholder="Password" class="w-full p-4 border-2 border-slate-100 rounded-2xl outline-none focus:border-orange-500 transition-all">
-                <button onclick="processLogin()" class="w-full bg-orange-600 text-white p-4 rounded-2xl font-bold text-lg active:scale-95 transition-all shadow-lg shadow-orange-200">Sign In</button>
-                <p class="text-center mt-10 text-slate-500">New member? <span class="text-orange-600 font-bold cursor-pointer underline" onclick="navigate('screen-signup')">Create Account</span></p>
+                <input type="number" id="l-mob" placeholder="Mobile Number" class="w-full p-4 border-2 border-gray-50 rounded-2xl outline-none focus:border-orange-500 transition-all">
+                <input type="password" id="l-pass" placeholder="Password" class="w-full p-4 border-2 border-gray-50 rounded-2xl outline-none focus:border-orange-500 transition-all">
+                <button onclick="doLogin()" class="w-full bg-orange-600 text-white p-4 rounded-2xl font-bold text-lg active:scale-95 shadow-lg shadow-orange-100">Sign In</button>
+                <div class="flex justify-between mt-8 text-sm">
+                    <span class="text-orange-600 font-bold cursor-pointer underline" onclick="show('view-signup')">Create Account</span>
+                    <span class="text-gray-400 cursor-pointer font-medium" onclick="show('view-forget')">Forgot Password?</span>
+                </div>
             </div>
         </div>
 
-        <div id="screen-signup" class="p-8 hidden">
-            <h2 class="text-3xl font-extrabold mb-8 text-slate-800 text-center">Register</h2>
+        <div id="view-signup" class="p-8 hidden">
+            <h2 class="text-3xl font-bold mb-2 text-gray-800">New Account</h2>
+            <p class="text-gray-400 text-sm mb-8">Join VIP Food for the best experience.</p>
             <div class="space-y-4">
-                <input type="text" id="reg-name" placeholder="Full Name" class="w-full p-4 border-2 border-slate-100 rounded-2xl outline-none">
-                <input type="number" id="reg-mobile" placeholder="Mobile Number" class="w-full p-4 border-2 border-slate-100 rounded-2xl outline-none">
-                <input type="password" id="reg-pass" placeholder="Set Password" class="w-full p-4 border-2 border-slate-100 rounded-2xl outline-none">
-                <button onclick="processSignup()" class="w-full bg-slate-800 text-white p-4 rounded-2xl font-bold shadow-lg">Register Now</button>
-                <p class="text-center mt-6 text-slate-500" onclick="navigate('screen-login')">Back to Login</p>
+                <input type="text" id="s-name" placeholder="Full Name" class="w-full p-4 border-2 border-gray-50 rounded-2xl outline-none">
+                <input type="number" id="s-mob" placeholder="Mobile Number" class="w-full p-4 border-2 border-gray-50 rounded-2xl outline-none">
+                <input type="password" id="s-pass" placeholder="Create Password" class="w-full p-4 border-2 border-gray-50 rounded-2xl outline-none">
+                <button onclick="doSignup()" class="w-full bg-gray-800 text-white p-4 rounded-2xl font-bold active:scale-95 shadow-lg">Register & Login</button>
+                <p class="text-center mt-6 text-gray-500 text-sm" onclick="show('view-login')">Already have an account? <span class="font-bold underline text-gray-800">Login</span></p>
             </div>
         </div>
 
-        <div id="screen-menu" class="hidden p-4">
-            <div class="flex justify-between items-center mb-6 bg-orange-50 p-4 rounded-2xl border border-orange-100">
-                <h3 class="font-bold italic">Hi, <span id="user-display" class="text-orange-600">User</span></h3>
-                <button onclick="location.reload()" class="bg-white text-red-500 px-3 py-1 rounded-lg text-[10px] font-bold shadow-sm border border-red-100">LOGOUT</button>
+        <div id="view-forget" class="p-8 hidden">
+            <h2 class="text-3xl font-bold mb-2 text-gray-800">Reset Password</h2>
+            <p class="text-gray-400 text-sm mb-8">Enter your registered mobile and new password.</p>
+            <div class="space-y-4">
+                <input type="number" id="f-mob" placeholder="Registered Mobile" class="w-full p-4 border rounded-2xl outline-none">
+                <input type="password" id="f-new" placeholder="Enter New Password" class="w-full p-4 border rounded-2xl outline-none">
+                <button onclick="doForget()" class="w-full bg-orange-600 text-white p-4 rounded-2xl font-bold active:scale-95">Update via Database</button>
+                <p class="text-center mt-6 text-gray-400 text-sm underline cursor-pointer" onclick="show('view-login')">Go back to login</p>
+            </div>
+        </div>
+
+        <div id="view-menu" class="hidden p-4">
+            <div class="flex justify-between items-center mb-6 bg-orange-50 p-4 rounded-[2rem] border border-orange-100 shadow-sm">
+                <div>
+                    <p class="text-[10px] text-orange-500 font-black uppercase tracking-widest">Logged In As</p>
+                    <h3 class="font-extrabold text-gray-800" id="user-display">Guest User</h3>
+                </div>
+                <button onclick="location.reload()" class="bg-white text-red-500 px-4 py-1.5 rounded-full text-[10px] font-black border border-red-100 shadow-sm">LOGOUT</button>
             </div>
             
-            <div id="product-list" class="space-y-4 mb-80"></div>
+            <div id="product-list" class="space-y-4 mb-96"></div>
 
-            <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white p-5 border-t-2 border-orange-100 shadow-[0_-10px_25px_rgba(0,0,0,0.1)] rounded-t-[40px]">
-                <div class="grid grid-cols-2 gap-2 mb-2">
-                    <input type="text" id="order-addr" placeholder="House/Flat No." class="p-2 border rounded-xl text-xs bg-slate-50 outline-none">
-                    <input type="text" id="order-city" placeholder="City/Area" class="p-2 border rounded-xl text-xs bg-slate-50 outline-none">
+            <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white p-6 border-t shadow-[0_-20px_40px_rgba(0,0,0,0.1)] rounded-t-[3rem] z-40">
+                <div class="grid grid-cols-2 gap-2 mb-3">
+                    <input type="text" id="o-addr" placeholder="Flat/House No." class="p-3 border rounded-xl text-xs bg-gray-50 outline-none">
+                    <input type="text" id="o-city" placeholder="Area/Landmark" class="p-3 border rounded-xl text-xs bg-gray-50 outline-none">
                 </div>
-                <input type="text" id="order-loc" placeholder="Paste Google Maps Link (Required)" class="w-full p-2 mb-2 border border-orange-200 rounded-xl text-sm outline-none">
-                <input type="text" id="order-utr" placeholder="Enter Payment UTR Number (Required)" class="w-full p-3 mb-4 border-2 border-orange-600 rounded-2xl font-black text-center text-lg text-orange-700 outline-none">
-                <button onclick="processOrder()" class="w-full bg-orange-600 text-white p-4 rounded-3xl font-black flex justify-between px-10 shadow-xl shadow-orange-300 active:scale-95 transition-all">
-                    <span>PLACE ORDER</span>
-                    <span id="cart-total">₹0</span>
+                <input type="text" id="o-loc" placeholder="Paste Google Maps Link (Required)" class="w-full p-3 mb-3 border border-orange-100 rounded-xl text-sm outline-none">
+                <input type="text" id="o-utr" placeholder="Enter Payment UTR Number" class="w-full p-4 mb-5 border-2 border-orange-600 rounded-2xl font-black text-center text-orange-700 text-xl outline-none shadow-inner">
+                <button onclick="doOrder()" class="w-full bg-orange-600 text-white p-5 rounded-3xl font-black flex justify-between px-10 shadow-2xl shadow-orange-200 active:scale-95 transition-all">
+                    <span class="tracking-widest">PLACE ORDER</span>
+                    <span id="price-tag" class="bg-orange-500 px-3 py-1 rounded-lg">₹0</span>
                 </button>
             </div>
         </div>
     </div>
 
     <script>
-        const API_LINK = "https://script.google.com/macros/s/AKfycbwUJpHc2_e_066FF6b-pFlFUX4Ln2nHEsjoZdNuNNZ42-V07iyOJHfuW8KAHxnB4AN0/exec";
+        // OFFICIAL DEPLOYMENT LINK
+        const API = "https://script.google.com/macros/s/AKfycbzLXjegLuQUF10NFuKj7RVULb1E0vaXbT4SsrOTm8TPyqtfKgS1_EFC2tJkVDYxbi5s/exec";
         
-        let currentUser = null; 
-        let selectedItem = {name: "", price: 0};
+        let user = null; 
+        let cart = {name: "", price: 0};
 
-        function navigate(id) {
-            document.querySelectorAll('#app-shell > div:not(header):not(#loading-overlay)').forEach(d => d.classList.add('hidden'));
+        function show(id) {
+            document.querySelectorAll('#main-app > div:not(header):not(#loader)').forEach(d => d.classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
         }
 
-        async function processLogin() {
-            const m = document.getElementById('login-mobile').value;
-            const p = document.getElementById('login-pass').value;
-            if(!m || !p) return alert("Enter credentials!");
+        async function doLogin() {
+            const m = document.getElementById('l-mob').value;
+            const p = document.getElementById('l-pass').value;
+            if(!m || !p) return alert("Missing credentials!");
             
-            document.getElementById('loading-overlay').classList.remove('hidden');
+            document.getElementById('loader').classList.remove('hidden');
             try {
-                const res = await fetch(API_LINK, {method:'POST', body: JSON.stringify({action:"login", mobile:m, password:p})});
+                const res = await fetch(API, {method:'POST', body: JSON.stringify({action:"login", mobile:m, password:p})});
                 const d = await res.json();
-                if(d.status === "Success") {
-                    currentUser = {name: d.name, mobile: m};
+                if(d.status === "SUCCESS") {
+                    user = {name: d.name, mobile: m};
                     document.getElementById('user-display').innerText = d.name;
-                    loadProducts();
+                    fetchMenu();
                 } else alert("Invalid Mobile or Password!");
-            } catch(e) { alert("Error connecting to server."); }
-            document.getElementById('loading-overlay').classList.add('hidden');
+            } catch(e) { alert("Server connectivity issue!"); }
+            document.getElementById('loader').classList.add('hidden');
         }
 
-        async function processSignup() {
-            const n = document.getElementById('reg-name').value;
-            const m = document.getElementById('reg-mobile').value;
-            const p = document.getElementById('reg-pass').value;
-            if(!n || !m || !p) return alert("Please fill all fields!");
-            
-            document.getElementById('loading-overlay').classList.remove('hidden');
+        async function doSignup() {
+            const n = document.getElementById('s-name').value;
+            const m = document.getElementById('s-mob').value;
+            const p = document.getElementById('s-pass').value;
+            if(!n || !m || !p) return alert("Fill all information!");
+
+            document.getElementById('loader').classList.remove('hidden');
             try {
-                const res = await fetch(API_LINK, {method:'POST', body: JSON.stringify({action:"signup", name:n, mobile:m, password:p})});
-                const text = await res.text();
-                if(text === "Success") {
-                    alert("Account Registered! Please Login Now.");
-                    navigate('screen-login');
+                const res = await fetch(API, {method:'POST', body: JSON.stringify({action:"signup", name:n, mobile:m, password:p})});
+                const status = await res.text();
+                if(status === "EXISTS") {
+                    alert("Mobile number already registered! Switching to Login.");
+                    show('view-login');
+                } else if(status === "SUCCESS") {
+                    alert("Welcome! Account created successfully.");
+                    user = {name: n, mobile: m}; 
+                    document.getElementById('user-display').innerText = n;
+                    fetchMenu(); // AUTO LOGIN AFTER SIGNUP
                 }
-            } catch(e) { alert("Signup error. Try again."); }
-            document.getElementById('loading-overlay').classList.add('hidden');
+            } catch(e) { alert("Registration failed!"); }
+            document.getElementById('loader').classList.add('hidden');
         }
 
-        async function loadProducts() {
-            navigate('screen-menu');
-            const res = await fetch(API_LINK + "?sheet=Menu");
+        async function doForget() {
+            const m = document.getElementById('f-mob').value;
+            const np = document.getElementById('f-new').value;
+            if(!m || !np) return alert("Both fields are required!");
+
+            document.getElementById('loader').classList.remove('hidden');
+            try {
+                const res = await fetch(API, {method:'POST', body: JSON.stringify({action:"forget", mobile:m, newPass:np})});
+                const status = await res.text();
+                if(status === "UPDATED") {
+                    alert("Password updated in database! You can login now.");
+                    show('view-login');
+                } else alert("Mobile number not found in our records!");
+            } catch(e) { alert("Process failed!"); }
+            document.getElementById('loader').classList.add('hidden');
+        }
+
+        async function fetchMenu() {
+            show('view-menu');
+            const res = await fetch(API + "?sheet=Menu");
             const data = await res.json();
             let html = '';
             data.forEach(i => {
-                html += `<div class="bg-white p-4 rounded-3xl flex gap-4 shadow-sm border border-slate-50">
-                    <img src="${i.IMAGE}" class="w-20 h-20 object-cover rounded-2xl">
+                html += `<div class="bg-white p-4 rounded-[2.5rem] flex gap-4 border border-gray-100 shadow-sm">
+                    <img src="${i.IMAGE}" class="w-20 h-20 object-cover rounded-3xl shadow-inner">
                     <div class="flex-1 flex flex-col justify-between py-1">
-                        <h4 class="font-extrabold text-slate-800">${i.Name}</h4>
+                        <h4 class="font-extrabold text-gray-800 tracking-tight">${i.Name}</h4>
                         <div class="flex justify-between items-center">
-                            <span class="text-orange-600 font-black text-lg">₹${i.Price}</span>
-                            <button onclick="updateSelection('${i.Name}', ${i.Price})" class="bg-slate-800 text-white px-5 py-2 rounded-xl text-[10px] font-black tracking-widest active:bg-orange-600 transition-colors">ADD</button>
+                            <span class="text-orange-600 font-black text-xl">₹${i.Price}</span>
+                            <button onclick="setCart('${i.Name}', ${i.Price})" class="bg-gray-800 text-white px-5 py-2 rounded-2xl text-[10px] font-black uppercase tracking-widest active:bg-orange-600 transition-all">Select</button>
                         </div>
                     </div>
                 </div>`;
@@ -135,36 +178,36 @@
             document.getElementById('product-list').innerHTML = html;
         }
 
-        function updateSelection(n, p) { 
-            selectedItem = {name: n, price: p};
-            document.getElementById('cart-total').innerText = "₹" + p;
+        function setCart(n, p) { 
+            cart = {name: n, price: p};
+            document.getElementById('price-tag').innerText = "₹" + p;
         }
 
-        async function processOrder() {
-            const loc = document.getElementById('order-loc').value;
-            const utr = document.getElementById('order-utr').value;
-            const addr = document.getElementById('order-addr').value + " " + document.getElementById('order-city').value;
+        async function doOrder() {
+            const loc = document.getElementById('o-loc').value;
+            const utr = document.getElementById('o-utr').value;
+            const addr = document.getElementById('o-addr').value + " " + document.getElementById('o-city').value;
 
-            if(!loc || !utr || selectedItem.price === 0) return alert("Select item & Provide Address/UTR/Maps Link!");
+            if(!loc || !utr || cart.price === 0) return alert("Mandatory: Select item, provide Maps Link and UTR ID.");
 
-            document.getElementById('loading-overlay').classList.remove('hidden');
+            document.getElementById('loader').classList.remove('hidden');
             try {
-                await fetch(API_LINK, {
+                await fetch(API, {
                     method: 'POST',
                     body: JSON.stringify({
                         action: "order",
-                        mobile: currentUser.mobile,
+                        mobile: user.mobile,
                         orderId: "V" + Date.now().toString().slice(-6),
-                        details: selectedItem.name + " (" + addr + ")",
-                        total: selectedItem.price,
+                        details: cart.name + " (" + addr + ")",
+                        total: cart.price,
                         utr: utr,
                         location: loc
                     })
                 });
-                alert("Order Placed Successfully!");
+                alert("Order Dispatched Successfully! Thank you.");
                 location.reload();
-            } catch(e) { alert("Order Failed!"); }
-            document.getElementById('loading-overlay').classList.add('hidden');
+            } catch(e) { alert("Transaction error!"); }
+            document.getElementById('loader').classList.add('hidden');
         }
     </script>
 </body>
