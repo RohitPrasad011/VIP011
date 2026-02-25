@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Apna Food App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        :root { --prm: #e67e22; --sec: #2c3e50; }
+        body { font-family: Arial; margin: 0; background: #f4f4f4; }
+        .hidden { display: none; }
+        .card { background: white; margin: 10px; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        input, button { width: 100%; padding: 10px; margin: 5px 0; border-radius: 5px; border: 1px solid #ddd; box-sizing: border-box; }
+        button { background: var(--prm); color: white; font-weight: bold; border: none; cursor: pointer; }
+        .admin-order { border-left: 5px solid var(--prm); }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <div id="login-screen" class="card">
+        <h2>Login</h2>
+        <input type="number" id="login-mobile" placeholder="Mobile Number">
+        <input type="password" id="login-pass" placeholder="Password">
+        <button onclick="login()">Login</button>
+        <p onclick="showSignup()">Naya account banayein (Signup)</p>
+    </div>
+
+    <div id="customer-screen" class="hidden">
+        <div class="card">
+            <h3>Welcome, <span id="user-name"></span></h3>
+            <button onclick="logout()" style="background:red">Logout</button>
+        </div>
+        <div id="menu-items"></div>
+        <div class="card">
+            <h4>Cart & Payment</h4>
+            <input type="text" id="order-utr" placeholder="Enter Payment UTR ID (Required)">
+            <input type="text" id="order-loc" placeholder="Paste Google Map Link (Required)">
+            <button onclick="placeOrder()">Confirm Order</button>
+        </div>
+    </div>
+
+    <div id="admin-screen" class="hidden">
+        <div class="card">
+            <h3>Admin Dashboard</h3>
+            <button onclick="logout()" style="background:red">Logout</button>
+        </div>
+        <div id="admin-orders"></div>
+    </div>
+</div>
+
+<script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbxUYR7rGbF9GXcurSURzBsLCP8uh5nsvXSW7JwPinHCN-dJujR2YYhzHg9I83uQ69Vp/exec";
+    let userData = {};
+
+    async function login() {
+        const mobile = document.getElementById('login-mobile').value;
+        const pass = document.getElementById('login-pass').value;
+        
+        const res = await fetch(scriptURL, {
+            method: 'POST',
+            body: JSON.stringify({ action: "login", mobile: mobile, password: pass })
+        });
+        const data = await res.json();
+
+        if(data.status === "Success") {
+            userData = data;
+            document.getElementById('login-screen').classList.add('hidden');
+            if(data.role === "Admin") {
+                showAdmin();
+            } else {
+                showCustomer();
+            }
+        } else {
+            alert("Galat Mobile ya Password!");
+        }
+    }
+
+    async function showCustomer() {
+        document.getElementById('customer-screen').classList.remove('hidden');
+        document.getElementById('user-name').innerText = userData.name;
+        // Fetch Menu
+        const res = await fetch(scriptURL + "?sheet=Menu");
+        const items = await res.json();
+        let html = '';
+        items.forEach(item => {
+            html += `<div class="card">
+                <img src="${item.IMAGE}" style="width:100px">
+                <h4>${item.Name} - ₹${item.Price}</h4>
+                <p>${item.Description}</p>
+            </div>`;
+        });
+        document.getElementById('menu-items').innerHTML = html;
+    }
+
+    async function showAdmin() {
+        document.getElementById('admin-screen').classList.remove('hidden');
+        const res = await fetch(scriptURL + "?sheet=Orders");
+        const orders = await res.json();
+        let html = '';
+        orders.reverse().forEach(ord => {
+            html += `<div class="card admin-order">
+                <p><b>Order ID:</b> ${ord.OrderID}</p>
+                <p><b>Items:</b> ${ord.OrderDetails}</p>
+                <p><b>UTR:</b> ${ord.UTR_ID}</p>
+                <a href="${ord.Location}" target="_blank">View Map Location</a>
+                <button onclick="alert('WhatsApp Logic Coming Soon')">Notify Customer</button>
+            </div>`;
+        });
+        document.getElementById('admin-orders').innerHTML = html;
+    }
+
+    async function placeOrder() {
+        const utr = document.getElementById('order-utr').value;
+        const loc = document.getElementById('order-loc').value;
+        if(!utr || !loc) return alert("UTR aur Location dono bharna zaroori hai!");
+
+        // Order Placement Logic
+        alert("Order processing...");
+        // Ismein hum fetch POST bhejenge jaise login mein bheja
+    }
+
+    function logout() { location.reload(); }
+</script>
+</body>
+</html>
