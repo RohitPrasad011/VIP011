@@ -7,8 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .hidden { display: none; }
-        .food-card img { height: 160px; width: 100%; object-fit: cover; border-radius: 15px; }
-        ::-webkit-scrollbar { width: 0px; }
+        .food-card img { height: 160px; width: 100%; object-fit: cover; border-radius: 20px; }
     </style>
 </head>
 <body class="bg-gray-100 font-sans">
@@ -16,13 +15,13 @@
         
         <div id="view-login" class="p-8 space-y-6 pt-20">
             <div class="text-center">
-                <h1 class="text-4xl font-black text-orange-600 uppercase tracking-tighter">VIP FOOD</h1>
-                <p class="text-gray-400 text-sm mt-1">Best Food, Everytime</p>
+                <h1 class="text-4xl font-black text-orange-600 uppercase">VIP FOOD</h1>
+                <p class="text-gray-400 text-sm">Best Food, Everytime</p>
             </div>
             <div class="space-y-4">
-                <input type="number" id="l-mob" placeholder="Mobile Number" class="w-full p-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-orange-500">
-                <input type="password" id="l-pass" placeholder="Password" class="w-full p-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-orange-500">
-                <button onclick="login()" id="btn-login" class="w-full bg-orange-600 text-white p-4 rounded-2xl font-bold shadow-lg shadow-orange-200">Login</button>
+                <input type="number" id="l-mob" placeholder="Mobile Number" class="w-full p-4 bg-gray-50 border rounded-2xl outline-none focus:border-orange-500">
+                <input type="password" id="l-pass" placeholder="Password" class="w-full p-4 bg-gray-50 border rounded-2xl outline-none focus:border-orange-500">
+                <button onclick="login()" id="btn-login" class="w-full bg-orange-600 text-white p-4 rounded-2xl font-bold shadow-lg">Login</button>
             </div>
             <p class="text-center text-sm text-gray-500">New here? <span class="text-orange-600 font-bold cursor-pointer underline" onclick="show('view-signup')">Sign Up</span></p>
         </div>
@@ -32,36 +31,26 @@
             <input type="text" id="s-name" placeholder="Full Name" class="w-full p-4 bg-gray-50 border rounded-2xl outline-none">
             <input type="number" id="s-mob" placeholder="Mobile Number" class="w-full p-4 bg-gray-50 border rounded-2xl outline-none">
             <input type="password" id="s-pass" placeholder="Create Password" class="w-full p-4 bg-gray-50 border rounded-2xl outline-none">
-            <button onclick="signup()" id="btn-signup" class="w-full bg-black text-white p-4 rounded-2xl font-bold shadow-lg">Register Now</button>
-            <p class="text-center text-sm text-gray-500" onclick="show('view-login')">Back to <span class="text-orange-600 font-bold cursor-pointer">Login</span></p>
+            <button onclick="signup()" id="btn-signup" class="w-full bg-black text-white p-4 rounded-2xl font-bold">Register Now</button>
+            <p class="text-center text-sm" onclick="show('view-login')">Back to <span class="text-orange-600 font-bold cursor-pointer">Login</span></p>
         </div>
 
         <div id="view-menu" class="hidden">
-            <header class="bg-orange-600 p-5 text-white flex justify-between items-center sticky top-0 z-20 shadow-md">
-                <div>
-                    <p class="text-xs opacity-80">Welcome,</p>
-                    <h3 id="user-display-name" class="font-bold text-lg leading-tight">User</h3>
-                </div>
-                <button onclick="location.reload()" class="bg-white/20 px-3 py-1 rounded-lg text-xs font-bold border border-white/40">LOGOUT</button>
+            <header class="bg-orange-600 p-5 text-white flex justify-between items-center sticky top-0 z-20">
+                <h3 id="user-display-name" class="font-bold text-lg">User</h3>
+                <button onclick="location.reload()" class="bg-white/20 px-3 py-1 rounded-lg text-xs">LOGOUT</button>
             </header>
-
-            <div id="menu-list" class="p-4 pb-56 space-y-6">
-                </div>
-
-            <div class="fixed bottom-0 max-w-md w-full bg-white p-5 border-t border-gray-100 shadow-[0_-10px_30px_rgba(0,0,0,0.1)] z-30">
-                <div class="flex justify-between mb-4 px-1">
-                    <span class="font-bold text-gray-500 uppercase text-xs">Total Bill</span>
-                    <span class="font-black text-orange-600 text-2xl">₹<span id="cart-total">0</span></span>
-                </div>
-                <input type="text" id="o-utr" placeholder="Enter Payment UTR Number" class="w-full p-4 mb-3 border-2 border-orange-100 rounded-2xl outline-none focus:border-orange-500 bg-orange-50/30 font-bold text-center">
-                <button onclick="placeOrder()" id="btn-order" class="w-full bg-orange-600 text-white p-4 rounded-2xl font-bold text-lg shadow-orange-300 shadow-xl">PLACE ORDER</button>
+            <div id="menu-list" class="p-4 pb-56 space-y-6"></div>
+            <div class="fixed bottom-0 max-w-md w-full bg-white p-5 border-t z-30 shadow-2xl">
+                <div class="flex justify-between mb-4"><span class="font-bold text-gray-500 uppercase text-xs">Total Bill</span><span class="font-black text-orange-600 text-2xl">₹<span id="cart-total">0</span></span></div>
+                <input type="text" id="o-utr" placeholder="Enter Payment UTR ID" class="w-full p-4 mb-3 border-2 border-orange-100 rounded-2xl text-center font-bold">
+                <button onclick="placeOrder()" id="btn-order" class="w-full bg-orange-600 text-white p-4 rounded-2xl font-bold text-lg">PLACE ORDER</button>
             </div>
         </div>
     </div>
 
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbzFwYZKMOfOL91Pl1CqvgHYCBnK_eEFTU_U3SWOQ-p2HbTpeWoBsg306BtClJExJyDj/exec";
-        
         let currentUser = null;
         let cartTotal = 0;
 
@@ -70,113 +59,68 @@
             document.getElementById(id).classList.remove('hidden');
         }
 
-        async function signup() {
-            const name = document.getElementById('s-name').value;
-            const mobile = document.getElementById('s-mob').value;
-            const pass = document.getElementById('s-pass').value;
-
-            if(!name || !mobile || !pass) return alert("Fill all fields");
-
-            const btn = document.getElementById('btn-signup');
-            btn.innerText = "Saving...";
-            btn.disabled = true;
-
-            try {
-                await fetch(API_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: JSON.stringify({
-                        "sheet": "Users",
-                        "data": { "Name": name, "Mobile": mobile, "Password": pass, "Role": "Customer" }
-                    })
-                });
-                alert("Account Created! Now Login.");
-                show('view-login');
-            } catch(e) { alert("Network Error. Try again."); }
-            btn.innerText = "Register Now";
-            btn.disabled = false;
-        }
-
-        async function login() {
+        // JSONP LOGIN (As per your new Script)
+        function login() {
             const mob = document.getElementById('l-mob').value;
             const pass = document.getElementById('l-pass').value;
-            if(!mob || !pass) return alert("Enter Details");
+            if(!mob || !pass) return alert("Please fill all details");
 
             const btn = document.getElementById('btn-login');
-            btn.innerText = "Checking...";
+            btn.innerText = "Connecting...";
+            btn.disabled = true;
 
-            try {
-                const res = await fetch(API_URL + "?sheet=Users");
-                const users = await res.json();
+            const script = document.createElement('script');
+            script.src = `${API_URL}?sheet=Users&callback=handleLogin`;
+            document.body.appendChild(script);
+
+            window.handleLogin = function(users) {
                 const user = users.find(u => String(u.Mobile) === String(mob) && String(u.Password) === String(pass));
-
                 if(user) {
                     currentUser = user;
                     document.getElementById('user-display-name').innerText = user.Name;
                     show('view-menu');
                     loadMenu();
-                } else { alert("Wrong Mobile or Password!"); }
-            } catch(e) { alert("Cannot connect to Sheet. Check Permissions."); }
-            btn.innerText = "Login";
+                } else { alert("Mobile or Password wrong!"); }
+                btn.innerText = "Login";
+                btn.disabled = false;
+                document.body.removeChild(script);
+            };
         }
 
-        async function loadMenu() {
+        function loadMenu() {
             const list = document.getElementById('menu-list');
-            list.innerHTML = "<p class='text-center py-20 text-gray-400'>Loading Menu...</p>";
-            try {
-                const res = await fetch(API_URL + "?sheet=Menu");
-                const menuData = await res.json();
-                
-                list.innerHTML = menuData.map(item => `
-                    <div class="food-card bg-white border border-gray-100 rounded-3xl p-3 shadow-sm">
-                        <img src="${item.Image}" onerror="this.src='https://via.placeholder.com/150?text=Food'">
+            list.innerHTML = "<p class='text-center py-10'>Fetching Menu...</p>";
+            const script = document.createElement('script');
+            script.src = `${API_URL}?sheet=Menu&callback=handleMenu`;
+            document.body.appendChild(script);
+
+            window.handleMenu = function(data) {
+                list.innerHTML = data.map(item => `
+                    <div class="food-card bg-white border rounded-[2rem] p-3 shadow-sm">
+                        <img src="${item.Image}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1147/1147805.png'">
                         <div class="p-3 flex justify-between items-end">
-                            <div class="flex-1">
-                                <h4 class="font-bold text-gray-800">${item.Name}</h4>
-                                <p class="text-xs text-gray-400 uppercase">${item.Category || ''}</p>
-                                <p class="text-orange-600 font-black text-xl">₹${item.Price}</p>
-                            </div>
-                            <button onclick="addToCart(${item.Price})" class="bg-black text-white px-4 py-2 rounded-xl font-bold text-xs">ADD</button>
+                            <div><h4 class="font-bold text-gray-800">${item.Name}</h4><p class="text-orange-600 font-black text-xl">₹${item.Price}</p></div>
+                            <button onclick="addToCart(${item.Price})" class="bg-black text-white px-5 py-2 rounded-xl text-xs font-bold">ADD</button>
                         </div>
-                    </div>
-                `).join('');
-            } catch(e) { list.innerHTML = "Error loading menu."; }
+                    </div>`).join('');
+                document.body.removeChild(script);
+            };
         }
 
-        function addToCart(price) {
-            cartTotal += parseInt(price);
-            document.getElementById('cart-total').innerText = cartTotal;
+        function addToCart(p) { cartTotal += parseInt(p); document.getElementById('cart-total').innerText = cartTotal; }
+
+        async function signup() {
+            const n = document.getElementById('s-name').value, m = document.getElementById('s-mob').value, p = document.getElementById('s-pass').value;
+            if(!n || !m || !p) return alert("Fill all details");
+            await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({"sheet":"Users","data":{"Name":n,"Mobile":m,"Password":p,"Role":"Customer"}}) });
+            alert("Account Created! Login Now."); show('view-login');
         }
 
         async function placeOrder() {
             const utr = document.getElementById('o-utr').value;
-            if(cartTotal === 0) return alert("Cart is empty");
-            if(!utr) return alert("UTR Number is required");
-
-            const btn = document.getElementById('btn-order');
-            btn.innerText = "Sending...";
-            btn.disabled = true;
-
-            try {
-                await fetch(API_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: JSON.stringify({
-                        "sheet": "Orders",
-                        "data": {
-                            "Customer Name": currentUser.Name,
-                            "Mobile Number": currentUser.Mobile,
-                            "OrderID": "VIP" + Date.now(),
-                            "TotalBill": cartTotal,
-                            "UTR_ID": utr,
-                            "Status": "Pending",
-                            "Order Details": "App Order"
-                        }
-                    })
-                });
-                alert("ORDER PLACED SUCCESSFULLY!");
-                location.reload();
-            } catch(e) { alert("Failed to send order."); }
+            if(cartTotal === 0 || !utr) return alert("Add items and enter UTR!");
+            await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({"sheet":"Orders","data":{"Customer Name":currentUser.Name,"Mobile Number":currentUser.Mobile,"OrderID":"VIP"+Date.now(),"TotalBill":cartTotal,"UTR_ID":utr,"Status":"Pending"}}) });
+            alert("ORDER PLACED SUCCESSFULLY!"); location.reload();
         }
     </script>
 </body>
