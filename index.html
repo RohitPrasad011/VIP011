@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Restaurant System</title>
+  <title>VIP Food Service</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 p-6">
@@ -27,51 +27,53 @@
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbxYSzeKTCxXn3RNswlpp8Yo6wbd6F4W7XcKE76LbZ4GEFe3NjQELlr7xJcA3HorQjh3/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwQBiWPqXDtqbZbRLRQuambC5NoisJ_i-BGw3w3JbiCy2y_N6lOiOOPhkxLucpVSqpk/exec";
 
 let currentUser = {};
 
-function signup() {
-  fetch(API_URL, {
+async function request(data) {
+  const formData = new URLSearchParams();
+  formData.append("data", JSON.stringify(data));
+
+  const res = await fetch(API_URL, {
     method: "POST",
-    body: JSON.stringify({
-      action: "signup",
-      mobile: document.getElementById("s_mobile").value,
-      password: document.getElementById("s_password").value,
-      name: document.getElementById("s_name").value
-    })
-  })
-  .then(res => res.json())
-  .then(data => alert(data.message));
+    body: formData
+  });
+  return res.json();
+}
+
+function signup() {
+  const data = {
+    action: "signup",
+    mobile: s_mobile.value,
+    password: s_password.value,
+    name: s_name.value
+  };
+  request(data).then(d => alert(d.message));
 }
 
 function login() {
-  fetch(API_URL, {
-    method: "POST",
-    body: JSON.stringify({
-      action: "login",
-      mobile: document.getElementById("mobile").value,
-      password: document.getElementById("password").value
-    })
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.role) {
-      currentUser.mobile = document.getElementById("mobile").value;
-      currentUser.role = data.role;
-      currentUser.name = data.name;
+  const data = {
+    action: "login",
+    mobile: mobile.value,
+    password: password.value
+  };
+  request(data).then(d => {
+    if (d.role) {
+      currentUser.mobile = mobile.value;
+      currentUser.role = d.role;
+      currentUser.name = d.name;
       showDashboard();
     } else {
-      alert(data.message);
+      alert(d.message);
     }
   });
 }
 
 function showDashboard() {
-  document.getElementById("authSection").classList.add("hidden");
-  document.getElementById("dashboard").classList.remove("hidden");
-  document.getElementById("welcome").innerText =
-    "Welcome " + currentUser.name + " (" + currentUser.role + ")";
+  authSection.classList.add("hidden");
+  dashboard.classList.remove("hidden");
+  welcome.innerText = "Welcome " + currentUser.name + " (" + currentUser.role + ")";
 
   if (currentUser.role === "admin") {
     loadOrders();
@@ -81,12 +83,7 @@ function showDashboard() {
 }
 
 function loadMenu() {
-  fetch(API_URL, {
-    method: "POST",
-    body: JSON.stringify({ action: "getMenu" })
-  })
-  .then(res => res.json())
-  .then(menu => {
+  request({ action: "getMenu" }).then(menu => {
     let html = "<h3 class='font-bold mb-2'>Menu</h3>";
     menu.forEach(item => {
       html += `<div class="border p-2 mb-2">
@@ -95,47 +92,35 @@ function loadMenu() {
         class="bg-orange-500 text-white px-2 py-1 ml-2">Order</button>
       </div>`;
     });
-    document.getElementById("content").innerHTML = html;
+    content.innerHTML = html;
   });
 }
 
 function placeOrder(item, price) {
-  fetch(API_URL, {
-    method: "POST",
-    body: JSON.stringify({
-      action: "placeOrder",
-      mobile: currentUser.mobile,
-      items: item,
-      total: price,
-      address: "Customer Address"
-    })
-  })
-  .then(res => res.json())
-  .then(data => alert(data.message));
+  const data = {
+    action: "placeOrder",
+    mobile: currentUser.mobile,
+    items: item,
+    total: price,
+    address: "Customer Address"
+  };
+  request(data).then(d => alert(d.message));
 }
 
 function loadOrders() {
-  fetch(API_URL, {
-    method: "POST",
-    body: JSON.stringify({
-      action: "getOrders",
-      mobile: currentUser.mobile,
-      role: currentUser.role
-    })
-  })
-  .then(res => res.json())
-  .then(orders => {
-    let html = "<h3 class='font-bold mb-2'>All Orders</h3>";
-    orders.forEach(order => {
-      html += `<div class="border p-2 mb-2">
-        Order ID: ${order.orderId}<br>
-        Items: ${order.items}<br>
-        Total: ₹${order.total}<br>
-        Status: ${order.status}
-      </div>`;
+  request({ action: "getOrders", mobile: currentUser.mobile, role: currentUser.role })
+    .then(orders => {
+      let html = "<h3 class='font-bold mb-2'>Orders</h3>";
+      orders.forEach(o => {
+        html += `<div class="border p-2 mb-2">
+          Order ID: ${o.orderId}<br>
+          Items: ${o.items}<br>
+          Total: ₹${o.total}<br>
+          Status: ${o.status}
+        </div>`;
+      });
+      content.innerHTML = html;
     });
-    document.getElementById("content").innerHTML = html;
-  });
 }
 </script>
 
