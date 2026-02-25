@@ -1,240 +1,143 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VIP Food Service | Premium Delivery</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<style>
-.hidden{display:none;}
-.spinner{
-border:4px solid #f3f3f3;
-border-top:4px solid #f97316;
-border-radius:50%;
-width:40px;
-height:40px;
-animation:spin 1s linear infinite;
-}
-@keyframes spin{
-0%{transform:rotate(0deg);}
-100%{transform:rotate(360deg);}
-}
-</style>
+  <title>Restaurant System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<body class="bg-gray-100 p-6">
 
-<body class="bg-gray-50 font-sans antialiased">
+<div id="authSection">
+  <h2 class="text-xl font-bold mb-2">Login</h2>
+  <input id="mobile" placeholder="Mobile" class="border p-2 w-full mb-2">
+  <input id="password" type="password" placeholder="Password" class="border p-2 w-full mb-2">
+  <button onclick="login()" class="bg-blue-500 text-white p-2 w-full">Login</button>
 
-<div id="main-app" class="max-w-md mx-auto min-h-screen bg-white shadow-2xl relative overflow-hidden">
+  <hr class="my-4">
 
-<header class="bg-orange-600 text-white py-6 text-center shadow-lg">
-<h1 class="text-2xl font-black uppercase">VIP FOOD SERVICE</h1>
-<p class="text-xs tracking-widest opacity-75">PREMIUM QUALITY & FAST DELIVERY</p>
-</header>
-
-<div id="loader" class="hidden absolute inset-0 bg-white/90 z-50 flex flex-col justify-center items-center">
-<div class="spinner mb-4"></div>
-<p class="font-bold text-orange-600 animate-pulse uppercase text-xs tracking-widest">
-Processing Request...
-</p>
-</div>
-
-<!-- LOGIN -->
-<div id="view-login" class="p-8">
-<h2 class="text-3xl font-bold mb-2">Welcome Back</h2>
-<div class="space-y-4">
-<input type="tel" id="l-mob" placeholder="Mobile Number"
-class="w-full p-4 border-2 rounded-2xl outline-none">
-<input type="password" id="l-pass" placeholder="Password"
-class="w-full p-4 border-2 rounded-2xl outline-none">
-<button onclick="doLogin()"
-class="w-full bg-orange-600 text-white p-4 rounded-2xl font-bold">
-Sign In
-</button>
-<div class="flex justify-between mt-6 text-sm">
-<span class="text-orange-600 cursor-pointer"
-onclick="show('view-signup')">Create Account</span>
-<span class="text-gray-500 cursor-pointer"
-onclick="show('view-forget')">Forgot Password?</span>
-</div>
-</div>
+  <h2 class="text-xl font-bold mb-2">Signup</h2>
+  <input id="s_mobile" placeholder="Mobile" class="border p-2 w-full mb-2">
+  <input id="s_password" type="password" placeholder="Password" class="border p-2 w-full mb-2">
+  <input id="s_name" placeholder="Name" class="border p-2 w-full mb-2">
+  <button onclick="signup()" class="bg-green-500 text-white p-2 w-full">Create Account</button>
 </div>
 
-<!-- SIGNUP -->
-<div id="view-signup" class="hidden p-8">
-<h2 class="text-3xl font-bold mb-2">New Account</h2>
-<div class="space-y-4">
-<input type="text" id="s-name" placeholder="Full Name"
-class="w-full p-4 border-2 rounded-2xl outline-none">
-<input type="tel" id="s-mob" placeholder="Mobile Number"
-class="w-full p-4 border-2 rounded-2xl outline-none">
-<input type="password" id="s-pass" placeholder="Create Password"
-class="w-full p-4 border-2 rounded-2xl outline-none">
-<button onclick="doSignup()"
-class="w-full bg-gray-800 text-white p-4 rounded-2xl font-bold">
-Register & Login
-</button>
-<p class="text-center mt-6 text-sm cursor-pointer"
-onclick="show('view-login')">Already have account? Login</p>
-</div>
-</div>
-
-<!-- FORGET -->
-<div id="view-forget" class="hidden p-8">
-<h2 class="text-3xl font-bold mb-2">Reset Password</h2>
-<div class="space-y-4">
-<input type="tel" id="f-mob" placeholder="Registered Mobile"
-class="w-full p-4 border rounded-2xl outline-none">
-<input type="password" id="f-new" placeholder="New Password"
-class="w-full p-4 border rounded-2xl outline-none">
-<button onclick="doForget()"
-class="w-full bg-orange-600 text-white p-4 rounded-2xl font-bold">
-Update Password
-</button>
-<p class="text-center mt-6 cursor-pointer"
-onclick="show('view-login')">Back to Login</p>
-</div>
-</div>
-
-<!-- MENU -->
-<div id="view-menu" class="hidden p-4">
-<div class="flex justify-between items-center mb-6 bg-orange-50 p-4 rounded-2xl">
-<div>
-<p class="text-xs text-orange-500 font-bold">Logged In As</p>
-<h3 class="font-bold" id="user-display"></h3>
-</div>
-<button onclick="location.reload()"
-class="bg-red-500 text-white px-4 py-1 rounded-full text-xs">
-Logout
-</button>
-</div>
-
-<div id="product-list" class="space-y-4 mb-80"></div>
-
-<div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white p-6 border-t shadow-lg">
-<input type="text" id="o-addr" placeholder="House / Area"
-class="w-full p-3 border rounded-xl mb-2">
-<input type="text" id="o-loc" placeholder="Google Maps Link"
-class="w-full p-3 border rounded-xl mb-2">
-<input type="text" id="o-utr" placeholder="Payment UTR Number"
-class="w-full p-3 border rounded-xl mb-3">
-<button onclick="doOrder()"
-class="w-full bg-orange-600 text-white p-4 rounded-2xl font-bold">
-Place Order - <span id="price-tag">₹0</span>
-</button>
-</div>
-</div>
-
+<div id="dashboard" class="hidden">
+  <h2 id="welcome" class="text-xl font-bold mb-4"></h2>
+  <div id="content"></div>
 </div>
 
 <script>
+const API_URL = "https://script.google.com/macros/s/AKfycbxYSzeKTCxXn3RNswlpp8Yo6wbd6F4W7XcKE76LbZ4GEFe3NjQELlr7xJcA3HorQjh3/exec";
 
-const API="https://script.google.com/macros/s/AKfycbxrLmUecZVVMym-8KyW3gDbhpus4aSnkruIM2vSGkZvgxk30LMRMgrHl7cMc5OODrFg/exec";
+let currentUser = {};
 
-let user=null;
-let cart={name:"",price:0};
-
-function show(id){
-document.querySelectorAll('#main-app > div:not(header):not(#loader)')
-.forEach(d=>d.classList.add('hidden'));
-document.getElementById(id).classList.remove('hidden');
+function signup() {
+  fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "signup",
+      mobile: document.getElementById("s_mobile").value,
+      password: document.getElementById("s_password").value,
+      name: document.getElementById("s_name").value
+    })
+  })
+  .then(res => res.json())
+  .then(data => alert(data.message));
 }
 
-function loader(state){
-document.getElementById('loader')
-.classList[state?"remove":"add"]('hidden');
+function login() {
+  fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "login",
+      mobile: document.getElementById("mobile").value,
+      password: document.getElementById("password").value
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.role) {
+      currentUser.mobile = document.getElementById("mobile").value;
+      currentUser.role = data.role;
+      currentUser.name = data.name;
+      showDashboard();
+    } else {
+      alert(data.message);
+    }
+  });
 }
 
-async function doLogin(){
-const m=lMob.value;
-const p=lPass.value;
-if(!m||!p)return alert("Missing credentials!");
-loader(true);
-try{
-const res=await fetch(API,{method:'POST',body:JSON.stringify({action:"login",mobile:m,password:p})});
-const d=await res.json();
-if(d.status==="SUCCESS"){
-user={name:d.name,mobile:m};
-userDisplay.innerText=d.name;
-fetchMenu();
-}else alert("Invalid Mobile or Password!");
-}catch(e){alert("Server error!");}
-loader(false);
+function showDashboard() {
+  document.getElementById("authSection").classList.add("hidden");
+  document.getElementById("dashboard").classList.remove("hidden");
+  document.getElementById("welcome").innerText =
+    "Welcome " + currentUser.name + " (" + currentUser.role + ")";
+
+  if (currentUser.role === "admin") {
+    loadOrders();
+  } else {
+    loadMenu();
+  }
 }
 
-async function doSignup(){
-const n=sName.value;
-const m=sMob.value;
-const p=sPass.value;
-if(!n||!m||!p)return alert("Fill all details!");
-loader(true);
-try{
-const res=await fetch(API,{method:'POST',body:JSON.stringify({action:"signup",name:n,mobile:m,password:p})});
-const d=await res.json();
-if(d.status==="EXISTS"){alert("Mobile already registered!");show('view-login');}
-else if(d.status==="SUCCESS"){alert("Account created!");user={name:n,mobile:m};userDisplay.innerText=n;fetchMenu();}
-}catch(e){alert("Signup failed!");}
-loader(false);
+function loadMenu() {
+  fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({ action: "getMenu" })
+  })
+  .then(res => res.json())
+  .then(menu => {
+    let html = "<h3 class='font-bold mb-2'>Menu</h3>";
+    menu.forEach(item => {
+      html += `<div class="border p-2 mb-2">
+        ${item.name} - ₹${item.price}
+        <button onclick="placeOrder('${item.name}', ${item.price})"
+        class="bg-orange-500 text-white px-2 py-1 ml-2">Order</button>
+      </div>`;
+    });
+    document.getElementById("content").innerHTML = html;
+  });
 }
 
-async function doForget(){
-const m=fMob.value;
-const np=fNew.value;
-if(!m||!np)return alert("Fill both fields!");
-loader(true);
-try{
-const res=await fetch(API,{method:'POST',body:JSON.stringify({action:"forget",mobile:m,newPass:np})});
-const d=await res.json();
-if(d.status==="UPDATED"){alert("Password updated!");show('view-login');}
-else alert("Mobile not found!");
-}catch(e){alert("Process failed!");}
-loader(false);
+function placeOrder(item, price) {
+  fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "placeOrder",
+      mobile: currentUser.mobile,
+      items: item,
+      total: price,
+      address: "Customer Address"
+    })
+  })
+  .then(res => res.json())
+  .then(data => alert(data.message));
 }
 
-async function fetchMenu(){
-show('view-menu');
-const res=await fetch(API+"?sheet=Menu");
-const data=await res.json();
-let html='';
-data.forEach(i=>{
-html+=`<div class="bg-white p-4 rounded-2xl shadow flex justify-between">
-<div><h4 class="font-bold">${i.Name}</h4>
-<p class="text-orange-600 font-bold">₹${i.Price}</p></div>
-<button onclick="setCart('${i.Name}',${i.Price})"
-class="bg-gray-800 text-white px-4 py-1 rounded-xl text-xs">Select</button>
-</div>`;
-});
-productList.innerHTML=html;
+function loadOrders() {
+  fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "getOrders",
+      mobile: currentUser.mobile,
+      role: currentUser.role
+    })
+  })
+  .then(res => res.json())
+  .then(orders => {
+    let html = "<h3 class='font-bold mb-2'>All Orders</h3>";
+    orders.forEach(order => {
+      html += `<div class="border p-2 mb-2">
+        Order ID: ${order.orderId}<br>
+        Items: ${order.items}<br>
+        Total: ₹${order.total}<br>
+        Status: ${order.status}
+      </div>`;
+    });
+    document.getElementById("content").innerHTML = html;
+  });
 }
-
-function setCart(n,p){
-cart={name:n,price:p};
-priceTag.innerText="₹"+p;
-}
-
-async function doOrder(){
-const addr=oAddr.value;
-const loc=oLoc.value;
-const utr=oUtr.value;
-if(!addr||!loc||!utr||cart.price===0)
-return alert("Fill all details & select item!");
-loader(true);
-try{
-await fetch(API,{method:'POST',body:JSON.stringify({
-action:"order",
-mobile:user.mobile,
-orderId:"V"+Date.now(),
-details:cart.name,
-address:addr,
-total:cart.price,
-utr:utr,
-location:loc
-})});
-alert("Order placed successfully!");
-location.reload();
-}catch(e){alert("Order failed!");}
-loader(false);
-}
-
 </script>
+
 </body>
 </html>
